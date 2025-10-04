@@ -18,7 +18,7 @@ class RedirectBasedOnRole
             $user = Auth::user();
 
             // If admin tries to access user dashboard, redirect to admin dashboard
-            if ($user->role === 'admin' && $request->is('dashboard')) {
+            if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             }
 

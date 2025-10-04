@@ -10,13 +10,39 @@
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
+                <!-- Navigation Links based on User Role -->
                 @auth
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
+                    @if(Auth::user()->role === 'admin')
+                        <!-- Admin Navigation -->
+                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('admin.dashboard')">
+                                {{ __('Dashboard') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
+                                {{ __('Products') }}
+                            </x-nav-link>
+                        </div>
+                    @elseif(Auth::user()->role === 'customer')
+                        <!-- Customer Navigation -->
+                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                                {{ __('Home') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('catalog.index')" :active="request()->routeIs('catalog.*')">
+                                {{ __('Catalog') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')">
+                                {{ __('Cart') }}
+                            </x-nav-link>
+                        </div>
+                    @else
+                        <!-- Default Authenticated User (no specific role) -->
+                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                                {{ __('Dashboard') }}
+                            </x-nav-link>
+                        </div>
+                    @endif
                 @endauth
             </div>
 
@@ -27,7 +53,14 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                <div>{{ Auth::user()->name }}</div>
+                                <div class="flex items-center gap-2">
+                                    <div>{{ Auth::user()->name }}</div>
+                                    @if(Auth::user()->role)
+                                        <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 capitalize">
+                                            {{ Auth::user()->role }}
+                                        </span>
+                                    @endif
+                                </div>
 
                                 <div class="ms-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -45,7 +78,6 @@
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-
                                 <x-dropdown-link :href="route('logout')"
                                         onclick="event.preventDefault();
                                                     this.closest('form').submit();">
@@ -85,9 +117,31 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             @auth
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                    {{ __('Dashboard') }}
-                </x-responsive-nav-link>
+                @if(Auth::user()->role === 'admin')
+                    <!-- Admin Mobile Navigation -->
+                    <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
+                        {{ __('Products') }}
+                    </x-responsive-nav-link>
+                @elseif(Auth::user()->role === 'customer')
+                    <!-- Customer Mobile Navigation -->
+                    <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('Home') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('catalog.index')" :active="request()->routeIs('catalog.*')">
+                        {{ __('Catalog') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')">
+                        {{ __('Cart') }}
+                    </x-responsive-nav-link>
+                @else
+                    <!-- Default Authenticated User Mobile Navigation -->
+                    <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-responsive-nav-link>
+                @endif
             @endauth
         </div>
 
@@ -97,6 +151,11 @@
                 <div class="px-4">
                     <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
                     <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                    @if(Auth::user()->role)
+                        <div class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 capitalize inline-block mt-1">
+                            {{ Auth::user()->role }}
+                        </div>
+                    @endif
                 </div>
 
                 <div class="mt-3 space-y-1">
@@ -107,7 +166,6 @@
                     <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-
                         <x-responsive-nav-link :href="route('logout')"
                                 onclick="event.preventDefault();
                                             this.closest('form').submit();">

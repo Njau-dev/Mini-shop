@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ProfileController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\OrderApiController;
+use App\Http\Controllers\Api\ProductApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,3 +12,6 @@ use Illuminate\Support\Facades\Route;
 | These routes are intended for API calls and return JSON responses.
 |
 */
+
+Route::get('/products', [ProductApiController::class, 'index']);
+Route::middleware(['auth'])->post('/orders', [OrderApiController::class, 'store']);

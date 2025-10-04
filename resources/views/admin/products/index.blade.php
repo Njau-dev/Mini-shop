@@ -13,7 +13,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Success Message -->
             @if (session('success'))
-                <div class="mb-6 bg-white border border-l-4 border-green-500 p-6 rounded-md shadow-sm">
+                <div class="mb-6 bg-green-50 border border-l-4 border-green-500 p-6 rounded-md shadow-sm">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -34,7 +34,7 @@
 
             <!-- Error Message -->
             @if (session('error'))
-                <div class="mb-6 bg-white border border-l-4 border-red-500 p-4 rounded-md shadow-sm">
+                <div class="mb-6 bg-red-50 border border-l-4 border-red-500 p-4 rounded-md shadow-sm">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -55,7 +55,7 @@
 
             <!-- Validation Errors -->
             @if ($errors->any())
-                <div class="mb-6 bg-white border border-l-4 border-red-500 p-4 rounded-md shadow-sm">
+                <div class="mb-6 bg-red-50 border border-l-4 border-red-500 p-4 rounded-md shadow-sm">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
