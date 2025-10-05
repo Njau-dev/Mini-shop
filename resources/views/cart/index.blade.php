@@ -95,24 +95,30 @@
 
                                                         <div
                                                             class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-4">
-                                                            <!-- Quantity Update Form -->
-                                                            <form method="POST"
-                                                                action="{{ route('cart.update', $id) }}"
-                                                                class="flex items-center gap-3">
-                                                                @csrf
-                                                                @method('PATCH')
-                                                                <label
-                                                                    class="text-sm font-medium text-gray-700">Quantity:</label>
-                                                                <div class="flex items-center gap-2">
-                                                                    <input type="number" name="quantity"
-                                                                        value="{{ $item['quantity'] }}" min="1"
-                                                                        class="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center">
-                                                                    <button type="submit"
-                                                                        class="text-sm bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
-                                                                        Update
-                                                                    </button>
-                                                                </div>
-                                                            </form>
+                                                            <div>
+                                                                <!-- Quantity Update Form -->
+                                                                <form method="POST"
+                                                                    action="{{ route('cart.update', $id) }}"
+                                                                    class="flex items-center gap-3">
+                                                                    @csrf
+                                                                    @method('PATCH')
+                                                                    <label
+                                                                        class="text-sm font-medium text-gray-700">Quantity:</label>
+                                                                    <div class="flex items-center gap-2">
+                                                                        <input type="number" name="quantity"
+                                                                            value="{{ $item['quantity'] }}" min="1"
+                                                                            class="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center">
+                                                                        <button type="submit"
+                                                                            class="text-sm bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
+                                                                            Update
+                                                                        </button>
+                                                                    </div>
+
+                                                                </form>
+
+                                                                {{-- stock number --}}
+                                                                <p class="text-sm text-gray-500 mt-2">In Stock: {{ $item['stock'] }}</p>
+                                                            </div>
 
                                                             <!-- Price Information -->
                                                             <div class="text-right">

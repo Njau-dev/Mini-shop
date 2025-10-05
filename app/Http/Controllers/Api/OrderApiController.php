@@ -43,6 +43,6 @@ class OrderApiController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Order created', 'order_id' => $order->id]);
+        return response()->json(['message' => 'Order created', 'order_id' => $order->id, 'total' => $total], 201);
     }
 }

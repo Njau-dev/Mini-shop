@@ -1,66 +1,296 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Mini Shop – Red Giant Laravel Assessment
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+- A mini e-commerce system built with Laravel 11 for the Red Giant full-stack assessment.
+Designed with role-based access and a complete shopping workflow from catalog to checkout.
 
-## About Laravel
+## Table of Contents
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. Installation & Setup
+2. Usage Guide
+3. Tech stack
+4. API Testing
+5. SQL Answers
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **PHP**: v8.2 or higher  
+- **Laravel**: v11  
+- **Node.js**: v18 or higher (includes `npm`)  
+- **MySQL**: v8 or compatible  
+- **Git**
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 1. Installation & Setup
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. **Clone the repository**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Get a copy of the project from GitHub and move into the project folder.
 
-## Laravel Sponsors
+   ```
+   git clone https://github.com/Njau-dev/Mini-shop.git
+   cd Mini-shop
+   ```
+   
+2. **Install Dependencies**
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- These commands install all Laravel backend dependencies and frontend assets as well.
 
-### Premium Partners
+   ```
+   composer install
+   npm install
+   ```
+   
+3. **Configure environment**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- Duplicate the example environment file and generate the application key.
 
-## Contributing
+    ```
+    cp .env.example .env
+    php artisan key:generate
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. **Create a MySQL database**
 
-## Code of Conduct
+- Log in to MySQL and create a database for the project.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    ```
+    mysql -u root -p
+    CREATE DATABASE mini_shop;
+    EXIT;
+    ```
 
-## Security Vulnerabilities
+5. **Configure .env Credentials**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- Open .env and set your database connection details.
 
-## License
+    ```
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=mini_shop
+    DB_USERNAME=root
+    DB_PASSWORD=your_password
+    ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+6. **Run migrations and seeders**
+
+- This creates all database tables and seeds default users and sample products. 
+
+    ```
+    php artisan migrate --seed
+    ```
+
+7. **Start the development server**
+    ```
+    php artisan serve
+    ```
+
+8. **Run Vite for Tailwind and assets**
+
+- This compiles Tailwind CSS and watches for UI changes.
+    ```
+    npm run dev
+    ```
+
+
+The project will be available at 👉 http://localhost:8000
+
+
+
+## 2. Usage Guide
+
+### Guest Users
+
+- Guests can access the Welcome (/) and Catalog (/catalog) pages.
+
+- They can browse available products and view individual product details.
+
+- To add products to the cart or place orders, they must create an account or log in.
+
+### Customer Users
+
+After logging in as a customer, you can:
+
+    - Browse and search for products from the Catalog.
+
+    - Add products to your Cart.
+
+    - Update or remove items from the cart.
+
+    - Proceed to Checkout to confirm and create an order.
+
+    - View your Order History and detailed Order Summary.
+
+    - Access your Profile to update account details.
+
+#### Sample customer credentials:
+
+ - Email: customer@demo.com  
+ - Password: password
+
+
+### Admin Users
+
+After logging in as a customer, you can:
+
+    - Accessing the Dashboard for an overview of products and activity.
+
+    - Managing Products — create, update, and delete items.
+
+    - Managing Categories.
+
+    - Viewing and managing all Users in the system.
+
+    - Managing Orders — view customer orders and order details.
+
+
+#### Sample admin credentials:
+
+ - Email: admin@demo.com  
+ - Password: password
+
+
+### Roles summary
+    ```
+        | Role     | Features Available                                |
+        | -------- | ------------------------------------------------- |
+        | Guest    | View welcome and catalog pages                    |
+        | Customer | Full shopping experience (cart, checkout, orders) |
+        | Admin    | Manage products, categories, users, and orders    |
+
+    ```
+
+
+
+
+## 3. Tech Stack & Features
+
+- Backend: Laravel 11 (Blade, Eloquent ORM)
+
+- Frontend: Tailwind CSS, Blade templates
+
+- Database: MySQL
+
+- Auth: Laravel Breeze with roles (Admin, Customer) and middlewares for RBAC
+
+- API: REST endpoints for products and orders
+
+- Other: Seeder data, validation and policies for access control
+
+
+## 4. API Testing
+
+- This project includes two main API endpoints that demonstrate product retrieval and order creation.
+
+  1. GET – /api/products
+
+        - Fetches all available products along with their related categories.
+        This endpoint is public and does not require authentication.
+
+        #### Example Request:
+
+        - GET http://localhost:8000/api/products
+
+        #### Sample JSON Response:
+
+        ```
+            [
+                {
+                    "id": 11,
+                    "category_id": 15,
+                    "name": "Baseball Cap",
+                    "price": 24.99,
+                    "stock": 43,
+                    "description": "Classic baseball cap with adjustable strap.",
+                    "created_at": "2025-10-04T18:26:14.000000Z",
+                    "updated_at": "2025-10-05T02:02:12.000000Z",
+                    "category": {
+                    "id": 15,
+                    "name": "hat",
+                    "created_at": "2025-10-04T18:26:14.000000Z",
+                    "updated_at": "2025-10-04T18:26:14.000000Z"
+                    }
+                },
+                {
+                    "id": 13,
+                    "category_id": 16,
+                    "name": "Cotton T-Shirt",
+                    "price": 29.99,
+                    "stock": 100,
+                    "description": "100% cotton t-shirt, available in multiple colors.",
+                    "created_at": "2025-10-04T18:26:14.000000Z",
+                    "updated_at": "2025-10-04T18:26:14.000000Z",
+                    "category": {
+                    "id": 16,
+                    "name": "shirt",
+                    "created_at": "2025-10-04T18:26:14.000000Z",
+                    "updated_at": "2025-10-04T18:26:14.000000Z"
+                    }
+                }
+            ]
+        ```
+
+
+    2. POST – /api/orders
+
+    - Creates a new order for the authenticated customer.
+
+    - Since the app uses session-based Laravel Breeze authentication, the API cannot be tested directly via Postman.
+
+    - Instead, use Laravel Tinker to simulate the request and view the JSON response.
+
+    #### Steps:
+    
+    1. Start tinker
+        ```
+        php artisan tinker
+        ```
+
+    2. Run these commands inside Tinker:
+
+        ```
+            $user = App\Models\User::where('role', 'customer')->first();
+            Auth::login($user);
+            
+            $products = App\Models\Product::limit(2)->get();
+
+            echo "Available Products:\n";
+            foreach ($products as $product) {
+                echo "ID: {$product->id}, Name: {$product->name}, Price: {$product->price}, Stock: {$product->stock}\n";
+            }
+
+            $orderData = [
+                'items' => [
+                    ['product_id' => $products[0]->id, 'quantity' => 2],
+                    ['product_id' => $products[1]->id, 'quantity' => 1],
+                ],
+                'shipping_phone' => '+254712345678'
+            ];
+
+            $request = new Illuminate\Http\Request($orderData);
+            $controller = new App\Http\Controllers\Api\OrderApiController();
+            $response = $controller->store($request);
+
+            echo "\n=== API RESPONSE ===\n";
+            echo "Status Code: " . $response->getStatusCode() . "\n";
+            echo "Response Content: "  .  $response->getContent() . "\n";
+        ```
+
+    ### Expected Output:
+
+        ```
+            === API RESPONSE ===
+            Status Code: 201
+            Response Content: {"message":"Order created","order_id":13,"total":69.97}
+        ```
+
+## 5. SQL Answers
+
+- SQL solutions and screenshots are located in the sql_answers/ folder.
+
+- Please refer to the README.md inside that folder for:
+
+    - Step-by-step guide on how to run SQL commands using php artisan db.
+
+    - Screenshot results for all 3 queries (query_1.png, query_2.png, query_3.png).

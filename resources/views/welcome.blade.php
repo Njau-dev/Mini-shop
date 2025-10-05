@@ -29,7 +29,7 @@
                     <h3 class="text-3xl font-bold text-gray-800 mb-12 text-center">Shop by Category</h3>
 
                     <!-- Categories Grid -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 lg:gap-6">
                         @foreach ($categories as $category)
                             <a href="{{ route('catalog.index', ['category' => $category->id]) }}"
                                 class="bg-white border-2 border-gray-100 rounded-xl hover:border-blue-300 hover:shadow-xl transition-all duration-300 p-8 flex flex-col items-center justify-center group transform hover:-translate-y-1">

@@ -45,7 +45,11 @@ class CheckoutController extends Controller
             'shipping_name' => 'required|string|max:255',
             'shipping_address' => 'required|string|max:500',
             'shipping_city' => 'required|string|max:255',
-            'shipping_phone' => 'required|string|max:20',
+            'shipping_phone' => [
+                'required',
+                'string',
+                'regex:/^(\+254|0)(7|1)\d{8}$/'
+            ],
         ]);
 
         $total = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);

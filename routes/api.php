@@ -13,5 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// public route
 Route::get('/products', [ProductApiController::class, 'index']);
-Route::middleware(['auth'])->post('/orders', [OrderApiController::class, 'store']);
+
+// customer route
+Route::middleware(['auth.message'])->post('/orders', [OrderApiController::class, 'store']);

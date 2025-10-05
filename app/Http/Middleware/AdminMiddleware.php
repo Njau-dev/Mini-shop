@@ -17,16 +17,16 @@ class AdminMiddleware
     {
         $user = $request->user();
 
+        // Checks if user is admin and allows access
+        if ($user && $user->role === 'admin') {
+            return $next($request);
+        }
+
         // if request is an api request
         if ($request->expectsJson()) {
             return response()->json([
                 'message' => 'Access denied: You do not have the privileges.'
             ], 403);
-        }
-
-        // Checks if user is admin and allows access
-        if ($user && $user->role === 'admin') {
-            return $next($request);
         }
 
         // If not admin, redirect with error message

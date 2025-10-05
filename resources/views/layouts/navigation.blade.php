@@ -21,6 +21,12 @@
                             <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
                                 {{ __('Products') }}
                             </x-nav-link>
+                            <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
+                                {{ __('Orders') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                                {{ __('Users') }}
+                            </x-nav-link>
                         </div>
                     @elseif(Auth::user()->role === 'customer')
                         <!-- Customer Navigation -->
@@ -33,6 +39,9 @@
                             </x-nav-link>
                             <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')">
                                 {{ __('Cart') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
+                                {{ __('My Orders') }}
                             </x-nav-link>
                         </div>
                     @else
@@ -135,6 +144,9 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')">
                         {{ __('Cart') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
+                        {{ __('My Orders') }}
                     </x-responsive-nav-link>
                 @else
                     <!-- Default Authenticated User Mobile Navigation -->

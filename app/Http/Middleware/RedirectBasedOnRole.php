@@ -14,19 +14,23 @@ class RedirectBasedOnRole
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()) {
-            $user = Auth::user();
+        // If user is not logged in
+        if (!Auth::check()) {
+            return $next($request);
+        }
 
-            // If admin tries to access user dashboard, redirect to admin dashboard
-            if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard');
-            }
+        $user = Auth::user();
 
-            // If regular user tries to access admin area, redirect to user dashboard
-            if ($user->role !== 'admin' && $request->is('admin/*')) {
+        // If admin tries to access user pages
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard')
+                ->with('info', 'You are logged in as an admin.');
+        }
+
+        // If non-admin tries to access admin pages
+        if ($user->role !== 'admin' && $request->is('admin/*')) {
                 return redirect()->route('dashboard')
-                    ->with('error', 'Access denied: You do not have the privileges.');
-            }
+                ->with('error', 'Access denied: You do not have admin privileges.');
         }
 
         return $next($request);

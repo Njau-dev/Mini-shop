@@ -5,10 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+
+    use AuthorizesRequests;
+
     /**
      * Display a listing of products
      */
@@ -79,6 +83,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        // policy, to ensure that only admins can delete products
+        $this->authorize('delete', $product);
+
         $product->delete();
 
         return redirect()->route('admin.products.index')

@@ -39,7 +39,8 @@ class CartController extends Controller
                 'name' => $product->name,
                 'price' => $product->price,
                 'quantity' => $quantity,
-                'category' => $product->category->name
+                'category' => $product->category->name,
+                'stock' => $product->stock
             ];
         }
 
@@ -101,37 +102,5 @@ class CartController extends Controller
         session()->forget('cart');
 
         return back()->with('success', 'Cart cleared successfully!');
-    }
-
-    public function checkout()
-    {
-        $cart = session()->get('cart', []);
-        if (empty($cart)) {
-            return back()->with('error', 'Your cart is empty.');
-        }
-
-        $total = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
-
-        $order = Order::create([
-            'user_id' => Auth::id(),
-            'total' => $total,
-        ]);
-
-        foreach ($cart as $id => $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $id,
-                'quantity' => $item['quantity'],
-                'price' => $item['price'],
-            ]);
-
-            // Reduce stock
-            $product = Product::find($id);
-            $product->decrement('stock', $item['quantity']);
-        }
-
-        session()->forget('cart');
-
-        return redirect()->route('orders.show', $order)->with('success', 'Order placed successfully!');
     }
 }
