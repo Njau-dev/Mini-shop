@@ -61,7 +61,7 @@
                     <div class="text-center mt-8">
                         <a href="{{ route('catalog.index') }}"
                             class="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-12 py-4 rounded-xl text-lg font-bold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                            View All Products
+                            View Catalog
                         </a>
                     </div>
                 </div>
