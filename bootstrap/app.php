@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         'auth.message' => \App\Http\Middleware\AuthWithMessage::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'role.redirect' => \App\Http\Middleware\RedirectBasedOnRole::class,
+        'role.access' => \App\Http\Middleware\RoleAccess::class,
     ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
