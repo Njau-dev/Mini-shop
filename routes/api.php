@@ -17,4 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/products', [ProductApiController::class, 'index']);
 
 // customer route
-Route::middleware(['auth.message'])->post('/orders', [OrderApiController::class, 'store']);
+Route::middleware(['auth:sanctum', 'role.access:customer'])->group(function () {
+    Route::post('/orders', [OrderApiController::class, 'store']);
+});

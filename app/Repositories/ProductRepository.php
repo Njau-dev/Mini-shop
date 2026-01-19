@@ -39,4 +39,25 @@ class ProductRepository
             ->limit($limit)
             ->get();
     }
+
+    public function getBestSelling(int $limit = 4)
+    {
+        return Product::with('category')
+            ->withCount(['orderItems as order_count' => function ($query) {
+                $query->whereHas('order');
+            }])
+            ->orderByDesc('order_count')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function totalCount(): int
+    {
+        return Product::count();
+    }
+
+    public function find(int $id): ?Product
+    {
+        return Product::find($id);
+    }
 }

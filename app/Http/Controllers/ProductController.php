@@ -19,8 +19,10 @@ class ProductController extends Controller
         return view('catalog.index', $data);
     }
 
-    public function show(Product $product)
+    public function show($id)
     {
+        $product = Product::findOrFail($id);
+
         $data = $this->productService->show($product);
 
         return view('catalog.show', $data);

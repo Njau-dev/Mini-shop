@@ -6,7 +6,9 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Policies\OrderPolicy;
 use App\Policies\ProductPolicy;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -32,5 +34,20 @@ class AppServiceProvider extends ServiceProvider
         foreach ($policies as $model => $policy) {
             Gate::policy($model, $policy);
         }
+
+        // 🔹 Cart count helper (global)
+        View::composer('*', function ($view) {
+            if (Auth::check()) {
+                $cart = Auth::user()->cart;
+
+                $cartCount = $cart
+                    ? $cart->items()->sum('quantity')
+                    : 0;
+            } else {
+                $cartCount = collect(session('cart', []))->sum('quantity');
+            }
+
+            $view->with('cartCount', $cartCount);
+        });
     }
 }

@@ -30,6 +30,13 @@ class RoleAccess
         }
 
         // =========================
+        // ADMIN HAS FULL ACCESS
+        // =========================
+        if ($user->role === 'admin') {
+            return $next($request);
+        }
+
+        // =========================
         // CUSTOMER RESTRICTIONS
         // =========================
         if ($area === 'admin') {
@@ -39,13 +46,6 @@ class RoleAccess
 
             return redirect()->route('dashboard')
                 ->with('error', 'You do not have admin privileges.');
-        }
-
-        // =========================
-        // ADMIN HAS FULL ACCESS
-        // =========================
-        if ($user->role === 'admin') {
-            return $next($request);
         }
 
         return $next($request);

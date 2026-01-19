@@ -80,7 +80,7 @@
                         </div>
 
                         <!-- Add to Cart Form -->
-                        <form method="POST" action="{{ route('cart.add', $product->id) }}" class="mb-6">
+                        <form method="POST" action="{{ route('cart.add', ['id' => $product->id]) }}" class="mb-6">
                             @csrf
                             <div class="flex flex-col sm:flex-row gap-4">
                                 <div class="flex items-center gap-3">

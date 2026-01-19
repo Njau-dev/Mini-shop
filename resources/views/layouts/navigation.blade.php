@@ -15,7 +15,7 @@
                     @if(Auth::user()->role === 'admin')
                         <!-- Admin Navigation -->
                         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('admin.dashboard')">
+                            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                                 {{ __('Dashboard') }}
                             </x-nav-link>
                             <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
@@ -39,20 +39,37 @@
                             </x-nav-link>
                             <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')">
                                 {{ __('Cart') }}
+                                @if($cartCount > 0)
+                                    <span class="ml-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold text-white bg-red-600 rounded-full">
+                                        {{ $cartCount }}
+                                    </span>
+                                @endif
                             </x-nav-link>
                             <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
                                 {{ __('My Orders') }}
                             </x-nav-link>
                         </div>
-                    @else
-                        <!-- Default Authenticated User (no specific role) -->
-                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                                {{ __('Dashboard') }}
-                            </x-nav-link>
-                        </div>
                     @endif
                 @endauth
+                {{-- Guest Navigation --}}
+                @guest
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Home') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('catalog.index')" :active="request()->routeIs('catalog.*')">
+                            {{ __('Catalog') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')">
+                            {{ __('Cart') }}
+                            @if($cartCount > 0)
+                                <span class="ml-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold text-white bg-red-600 rounded-full">
+                                    {{ $cartCount }}
+                                </span>
+                            @endif
+                        </x-nav-link>
+                    </div>
+                @endguest
             </div>
 
             <!-- Settings Dropdown / Login Link -->
@@ -144,6 +161,9 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.*')">
                         {{ __('Cart') }}
+                        @if($cartCount > 0)
+                            ({{ $cartCount }})
+                        @endif
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
                         {{ __('My Orders') }}

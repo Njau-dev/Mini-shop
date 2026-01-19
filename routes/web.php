@@ -13,34 +13,46 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// =======================================================
-// Public Routes (Accessible by Everyone)
-// =======================================================
+/*
+|--------------------------------------------------------------------------
+| Public Routes (Guests, Customers, Admins)
+|--------------------------------------------------------------------------
+*/
 
-// Landing page - accessible by everyone apart from admin
-Route::get('/', [HomeController::class, 'index'])->name('dashboard')->middleware('role.redirect');
+Route::middleware('role.access:public')->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('dashboard');
 
-Route::get('/catalog', [ProductController::class, 'index'])->name('catalog.index')->middleware('role.redirect');
-Route::get('/catalog/{id}', [ProductController::class, 'show'])->name('catalog.show')->middleware('role.redirect');
+    Route::get('/catalog', [ProductController::class, 'index'])->name('catalog.index');
+    Route::get('/catalog/{id}', [ProductController::class, 'show'])->name('catalog.show');
 
-// all authenticated users including admins
+    // Cart routes
+    Route::prefix('cart')->name('cart.')->group(function () {
+        Route::get('/', [CartController::class, 'index'])->name('index');
+        Route::post('/add/{id}', [CartController::class, 'add'])->name('add');
+        Route::patch('/update/{id}', [CartController::class, 'update'])->name('update');
+        Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('remove');
+        Route::delete('/clear', [CartController::class, 'clear'])->name('clear');
+    });
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes (Customers + Admins)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// =======================================================
-// Customer Routes (Only Authenticated Customers)
-// =======================================================
-Route::middleware(['auth.message', 'role.redirect'])->group(function () {
-
-    // Cart routes
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
-    Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
-    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-    Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+/*
+|--------------------------------------------------------------------------
+| Customer Routes (Authenticated Customers)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role.access:customer'])->group(function () {
 
     // checkout routes
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
@@ -52,11 +64,17 @@ Route::middleware(['auth.message', 'role.redirect'])->group(function () {
 });
 
 
-// =======================================================
-// Admin Dashboard Routes (Only admins have access)
-// =======================================================
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+*/
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'role.access:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Products Management Routes
