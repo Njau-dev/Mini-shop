@@ -10,8 +10,8 @@ use App\Repositories\ProductRepository;
 class ProductService
 {
     public function __construct(
-        private ProductRepository $products,
-        private CategoryRepository $categories
+        protected ProductRepository $products,
+        protected CategoryRepository $categories
     ) {}
 
     public function list(array $filters): array

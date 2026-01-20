@@ -13,7 +13,7 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
 
-    private function __construct(
+    public function __construct(
         protected CartService $cartService
     ) {}
 

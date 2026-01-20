@@ -40,6 +40,9 @@ class AppServiceProvider extends ServiceProvider
             if (Auth::check()) {
                 $cart = Auth::user()->cart;
 
+                // 📦 Cart
+                // dd($cart->items()->get());
+
                 $cartCount = $cart
                     ? $cart->items()->sum('quantity')
                     : 0;

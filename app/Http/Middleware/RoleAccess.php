@@ -23,7 +23,7 @@ class RoleAccess
                 }
 
                 return redirect()->route('login')
-                    ->with('error', 'Please log in to continue.');
+                    ->with('error', 'Please log in or register to continue.');
             }
 
             return $next($request);

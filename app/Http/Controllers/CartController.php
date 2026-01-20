@@ -2,104 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Product;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\AddToCartRequest;
+use App\Http\Requests\UpdateCartRequest;
+use App\Services\CartService;
 
 class CartController extends Controller
 {
-    public function add(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
-
-        // Validate quantity
-        $quantity = $request->input('quantity', 1);
-
-        if ($quantity > $product->stock) {
-            return back()->with('error', 'Requested quantity exceeds available stock.');
-        }
-
-        // Get cart from session
-        $cart = session()->get('cart', []);
-
-        // If product already in cart, update quantity
-        if (isset($cart[$id])) {
-            $newQuantity = $cart[$id]['quantity'] + $quantity;
-
-            if ($newQuantity > $product->stock) {
-                return back()->with('error', 'Cannot add more items. Stock limit reached.');
-            }
-
-            $cart[$id]['quantity'] = $newQuantity;
-        } else {
-            // Add new product to cart
-            $cart[$id] = [
-                'name' => $product->name,
-                'price' => $product->price,
-                'quantity' => $quantity,
-                'category' => $product->category->name,
-                'stock' => $product->stock
-            ];
-        }
-
-        // Save cart to session
-        session()->put('cart', $cart);
-
-        return back()->with('success', 'Product added to cart successfully!');
-    }
+    public function __construct(
+        protected CartService $cartService
+    ) {}
 
     public function index()
     {
-        $cart = session()->get('cart', []);
-        $total = 0;
+        $cart = $this->cartService->getItems();
+        $totals = $this->cartService->getTotals();
 
-        foreach ($cart as $item) {
-            $total += $item['price'] * $item['quantity'];
-        }
-
-        return view('cart.index', compact('cart', 'total'));
+        return view('cart.index', [
+            'cart' => $cart,
+            'total' => $totals['total'],
+        ]);
     }
 
-    public function update(Request $request, $id)
+    public function add(AddToCartRequest $request, int $id)
     {
-        $cart = session()->get('cart', []);
+        try {
+            $this->cartService->addItem(
+                $id,
+                $request->validatedQuantity()
+            );
 
-        if (isset($cart[$id])) {
-            $product = Product::findOrFail($id);
-            $quantity = $request->input('quantity', 1);
+            return back()->with('success', 'Product added to cart successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
 
-            if ($quantity > $product->stock) {
-                return back()->with('error', 'Requested quantity exceeds available stock.');
-            }
-
-            $cart[$id]['quantity'] = $quantity;
-            session()->put('cart', $cart);
+    public function update(UpdateCartRequest $request, int $id)
+    {
+        try {
+            $this->cartService->updateQuantity(
+                $id,
+                $request->validatedQuantity()
+            );
 
             return back()->with('success', 'Cart updated successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        return back()->with('error', 'Product not found in cart.');
     }
 
-    public function remove($id)
+    public function remove(int $id)
     {
-        $cart = session()->get('cart', []);
+        $this->cartService->removeItem($id);
 
-        if (isset($cart[$id])) {
-            unset($cart[$id]);
-            session()->put('cart', $cart);
-
-            return back()->with('success', 'Product removed from cart successfully!');
-        }
-
-        return back()->with('error', 'Product not found in cart.');
+        return back()->with('success', 'Product removed from cart successfully!');
     }
 
     public function clear()
     {
-        session()->forget('cart');
+        $this->cartService->clear();
 
         return back()->with('success', 'Cart cleared successfully!');
     }

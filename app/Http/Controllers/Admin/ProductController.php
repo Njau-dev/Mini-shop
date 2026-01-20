@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\ProductService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,10 @@ class ProductController extends Controller
 {
 
     use AuthorizesRequests;
+
+    public function __construct(
+        protected ProductService $productService
+    ) {}
 
     /**
      * Display a listing of products

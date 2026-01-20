@@ -2,18 +2,19 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    <div>
+        @if (session('info'))
+            <div class="mb-6 bg-blue-50 border border-blue-400 text-blue-700 px-4 py-3 rounded-xl relative shadow-sm">
+                <span class="block sm:inline">{{ session('info') }}</span>
+            </div>
+        @endif
 
-    @if (session('info'))
-        <div class="mb-6 bg-blue-50 border border-blue-400 text-blue-700 px-4 py-3 rounded-xl relative shadow-sm">
-            <span class="block sm:inline">{{ session('info') }}</span>
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div class="mb-6 bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded-xl relative shadow-sm">
-            <span class="block sm:inline">{{ session('error') }}</span>
-        </div>
-    @endif
+        @if (session('error'))
+            <div class="mb-6 bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded-xl relative shadow-sm">
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        @endif
+    </div>
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
