@@ -30,4 +30,34 @@ class OrderRepository
                 ->decrement('stock', $item['quantity']);
         }
     }
+
+    public function getOrdersByUserId(int $userId)
+    {
+        return Order::where('user_id', $userId)
+            ->withCount('items')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+    }
+
+    public function getUserOrderById(Order $order)
+    {
+        return $order->load('items.product.category');
+    }
+
+    public function getAllOrdersForAdmin()
+    {
+        return Order::with(['user', 'items.product'])
+            ->latest()
+            ->paginate(10);
+    }
+
+    public function getAdminOrderById(Order $order)
+    {
+        return $order->load(['user', 'items.product']);
+    }
+
+    public function updateOrderStatus(Order $order, string $status): void
+    {
+        $order->update(['status' => $status]);
+    }
 }

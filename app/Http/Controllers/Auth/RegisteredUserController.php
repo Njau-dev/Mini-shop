@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\CartService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,6 +15,11 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
+
+    public function __construct(
+        protected CartService $cartService
+    ) {}
+
     /**
      * Display the registration view.
      */
@@ -44,6 +50,9 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+
+        // merge guest cart with user cart after registration
+        $this->cartService->mergeSessionToDatabase(Auth::id());
 
         return redirect(route('dashboard', absolute: false));
     }

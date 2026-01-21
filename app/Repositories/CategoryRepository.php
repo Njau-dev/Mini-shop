@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * CategoryRepository
@@ -63,5 +64,15 @@ class CategoryRepository
     public function getCategoriesWithProductCount(): Collection
     {
         return Category::withCount('products')->orderBy('name')->get();
+    }
+
+    public function getCategoriesWithPaginatedProducts(): LengthAwarePaginator
+    {
+        return Category::withCount('products')->latest()->paginate(10);
+    }
+
+    public function totalCount(): int
+    {
+        return Category::count();
     }
 }

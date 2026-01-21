@@ -3,34 +3,34 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    public function __construct(
+        protected OrderService $orderService
+    ) {}
+
     public function index()
     {
-        $orders = Order::with(['user', 'items.product'])
-            ->latest()
-            ->paginate(10);
+        $orders = $this->orderService->getAdminOrders();
 
         return view('admin.orders.index', compact('orders'));
     }
 
     public function show(Order $order)
     {
-        $order->load(['user', 'items.product']);
+        $order = $this->orderService->getAdminOrderById($order);
 
         return view('admin.orders.show', compact('order'));
     }
 
-    public function update(Request $request, Order $order)
+    public function update(UpdateOrderRequest $request, Order $order)
     {
-        $request->validate([
-            'status' => 'required|in:pending,completed,failed'
-        ]);
-
-        $order->update(['status' => $request->status]);
+        $this->orderService->updateOrderStatus($order, $request->status);
 
         return redirect()->route('admin.orders.show', $order)
             ->with('success', 'Order status updated successfully.');

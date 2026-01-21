@@ -3,12 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckoutRequest;
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Product;
 use App\Services\CartService;
 use App\Services\OrderService;
-use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FilterProductRequest;
-use App\Models\Product;
 use App\Services\ProductService;
 
 class ProductController extends Controller
@@ -21,9 +20,7 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
-
-        $data = $this->productService->show($product);
+        $data = $this->productService->show($id);
 
         return view('catalog.show', $data);
     }

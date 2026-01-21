@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Product;
 use App\Repositories\OrderRepository;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,5 +40,30 @@ class OrderService
         $this->cartService->clear();
 
         return $order;
+    }
+
+    public function getUserOrders()
+    {
+        return  $this->orders->getOrdersByUserId(Auth::id());
+    }
+
+    public function getUserOrderById($order)
+    {
+        return $this->orders->getUserOrderById($order);
+    }
+
+    public function getAdminOrders()
+    {
+        return $this->orders->getAllOrdersForAdmin();
+    }
+
+    public function getAdminOrderById($order)
+    {
+        return $this->orders->getAdminOrderById($order);
+    }
+
+    public function updateOrderStatus($order, $status)
+    {
+        $this->orders->updateOrderStatus($order, $status);
     }
 }

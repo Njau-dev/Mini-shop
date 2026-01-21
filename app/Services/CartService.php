@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Product;
 use App\Repositories\CartRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -120,14 +121,9 @@ class CartService
             $subtotal += $item['price'] * $item['quantity'];
         }
 
-        $tax = $subtotal * 0.16; // 16% VAT
-        $shipping = $subtotal > 0 ? 200 : 0;
-        $total = $subtotal + $tax + $shipping;
+        $total = $subtotal; // Add tax, shipping, discounts as needed
 
         return [
-            'subtotal' => $subtotal,
-            'tax' => $tax,
-            'shipping' => $shipping,
             'total' => $total,
         ];
     }

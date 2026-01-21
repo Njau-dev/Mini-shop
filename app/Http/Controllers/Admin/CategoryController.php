@@ -3,17 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AddCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    public function __construct(
+        protected CategoryService $categoryService
+    ) {}
+
     /**
      * Display a listing of categories
      */
     public function index()
     {
-        $categories = Category::withCount('products')->latest()->paginate(10);
+        // $categories = Category::withCount('products')->latest()->paginate(10);
+        $categories = $this->categoryService->getCategoriesWithProducts();
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -28,13 +36,9 @@ class CategoryController extends Controller
     /**
      * Store a newly created category
      */
-    public function store(Request $request)
+    public function store(AddCategoryRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name',
-        ]);
-
-        Category::create($validated);
+        $this->categoryService->createCategory($request->validated());
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category created successfully.');
@@ -51,13 +55,9 @@ class CategoryController extends Controller
     /**
      * Update the specified category
      */
-    public function update(Request $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
-        ]);
-
-        $category->update($validated);
+        $this->categoryService->updateCategory($category->id, $request->validated());
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category updated successfully.');
@@ -74,7 +74,7 @@ class CategoryController extends Controller
                 ->with('error', 'Cannot delete category with existing products.');
         }
 
-        $category->delete();
+        $this->categoryService->deleteCategory($category->id);
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category deleted successfully.');

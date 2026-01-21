@@ -7,6 +7,23 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ProductRepository
 {
+
+    public function create(array $data): Product
+    {
+        return Product::create($data);
+    }
+
+    public function update(Product $product, array $data): Product
+    {
+        $product->update($data);
+        return $product;
+    }
+
+    public function delete(Product $product): bool
+    {
+        return $product->delete();
+    }
+
     public function paginatedWithFilters(array $filters): LengthAwarePaginator
     {
         $query = Product::with('category');
@@ -59,5 +76,15 @@ class ProductRepository
     public function find(int $id): ?Product
     {
         return Product::find($id);
+    }
+
+    public function totalStock(): int
+    {
+        return Product::sum('stock');
+    }
+
+    public function adminPaginatedProducts(): LengthAwarePaginator
+    {
+        return Product::with('category')->latest()->paginate(10);
     }
 }

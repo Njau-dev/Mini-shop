@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Services\OrderService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
+
+    public function __construct(
+        protected OrderService $orderService
+    ) {}
 
     use AuthorizesRequests;
 
@@ -16,10 +20,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::where('user_id', Auth::id())
-            ->withCount('items')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $orders = $this->orderService->getUserOrders();
 
         return view('orders.index', compact('orders'));
     }
@@ -32,7 +33,7 @@ class OrderController extends Controller
         // Policy, ensure the user can only view their own orders
         $this->authorize('view', $order);
 
-        $order->load('items.product.category');
+        $order = $this->orderService->getUserOrderById($order);
 
         return view('orders.show', compact('order'));
     }

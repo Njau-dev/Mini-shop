@@ -32,6 +32,22 @@ class CategoryService
     }
 
     /**
+     * Get categories with products
+     */
+    public function getCategoriesWithProducts()
+    {
+        return $this->categoryRepository->getCategoriesWithPaginatedProducts();
+    }
+
+    /**
+     * Get total category count
+     */
+    public function getTotalCount(): int
+    {
+        return $this->categoryRepository->totalCount();
+    }
+
+    /**
      * Get single category
      */
     public function getCategory(int $id)

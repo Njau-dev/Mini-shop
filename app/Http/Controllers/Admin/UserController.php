@@ -4,17 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\UserService;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    public function __construct(
+        protected UserService $userService
+    ) {}
+
     public function index()
     {
-        $users = User::where('role', '!=', 'admin')
-            ->withCount('orders')
-            ->latest()
-            ->paginate(10);
+        $users = $this->userService->getAllUsersExcludingAdmins();
 
         return view('admin.users.index', compact('users'));
     }
@@ -32,7 +33,7 @@ class UserController extends Controller
                 ->with('error', 'You cannot delete your own account.');
         }
 
-        $user->delete();
+        $this->userService->deleteUser($user);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User deleted successfully.');
